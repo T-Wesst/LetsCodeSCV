@@ -3,8 +3,9 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/Home';
-import TestScreen from '../screens/TestScreen';
+import HomeScreen from '../components/Home';
+import TestScreen from '../components/TestScreen';
+import RoomsScreen from '../components/RoomsScreen';
 
 // creating each of the navigation stacks then adding navigation options for each stack
 const HomeStack = createStackNavigator({
@@ -13,7 +14,21 @@ const HomeStack = createStackNavigator({
 
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarLabel: 'Lobby',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-home`
+          : 'md-information-circle'
+      }
+    />
+  ),
+};
+
+HomeScreen.navigationOptions = {
+  tabBarLabel: 'Lobby',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -27,11 +42,25 @@ HomeStack.navigationOptions = {
 };
 
 const LinksStack = createStackNavigator({
-  Links: TestScreen,
+  Links: RoomsScreen,
 });
 
 LinksStack.navigationOptions = {
   tabBarLabel: 'Rooms',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-chatboxes' : 'md-link'}
+    />
+  ),
+};
+
+const DirectStack = createStackNavigator({
+  DirectMsg: TestScreen,
+});
+
+DirectStack.navigationOptions = {
+  tabBarLabel: 'DirectMessage',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -56,7 +85,9 @@ SettingsStack.navigationOptions = {
 
 //exporting the bottom tab navigator as the default display after you log in
 export default createBottomTabNavigator({
-  HomeStack,
+  //HomeStack,
+  HomeScreen,
   LinksStack,
+  DirectStack,
   SettingsStack,
 });

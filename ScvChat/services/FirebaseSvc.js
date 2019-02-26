@@ -1,19 +1,14 @@
 import firebase from 'firebase';
 import uuid from 'uuid';
+import ignoreWarnings from 'react-native-ignore-warnings';
+import { FirebaseConfig } from './FirebaseConfig'
 
-const config = {
-  apiKey: "AIzaSyD6WKr4nBqVaGpVhjBEQ2v1FEDqWuLheko",
-  authDomain: "letscodescv-5dbc0.firebaseapp.com",
-  databaseURL: "https://letscodescv-5dbc0.firebaseio.com",
-  projectId: "letscodescv-5dbc0",
-  storageBucket: "letscodescv-5dbc0.appspot.com",
-  messagingSenderId: "313319506594"
-}
+ignoreWarnings('Setting a timer');
 
 class FirebaseSvc {
   constructor() {
     if (!firebase.apps.length) {
-      firebase.initializeApp(config);
+      firebase.initializeApp(FirebaseConfig);
     } else {
       console.log("firebase apps already running...")
     }
@@ -137,20 +132,24 @@ class FirebaseSvc {
 
   }
 
+  get roomsRef() {
+    return firebase.database().ref('RoomsList');
+  }
+
   parse = snapshot => {
-    const { timestamp: numberStamp, text, user } = snapshot.val();
+    const { createdAt, text, user } = snapshot.val();
     const { key: id } = snapshot;
     const { key: _id } = snapshot; //needed for giftedchat
-    const timestamp = new Date(numberStamp);
 
     const message = {
       id,
       _id,
-      timestamp,
+      createdAt,
       text,
       user,
     };
-    return message;
+    //return message;
+    return {...snapshot.val(), _id};
   };
 
   refOn = callback => {
@@ -165,7 +164,7 @@ class FirebaseSvc {
   
   // send the message to the Backend
   send = messages => {
-    console.log(messages);
+    console.log("firebaseSvd - messages:" + JSON.stringify(messages));
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
       const message = {
@@ -173,6 +172,7 @@ class FirebaseSvc {
         user,
         createdAt: this.timestamp,
       };
+      console.log("firebaseSvd --- final message:" + JSON.stringify(message));
       this.ref.push(message);
     }
   };

@@ -5,10 +5,11 @@ import {
   TextInput,  TouchableOpacity, View,
   Button, ImageEditor,
 } from 'react-native';
-import firebaseSvc from '../FirebaseSvc';
+import firebaseSvc from '../services/FirebaseSvc';
 import firebase from 'firebase';
 import { auth, initializeApp, storage } from 'firebase';
 import uuid from 'uuid';
+import styles from './Styles'
 
 class Login extends React.Component {
   static navigationOptions = {
@@ -40,11 +41,13 @@ class Login extends React.Component {
 
   loginSuccess = (user) => {
     console.log('login successful, navigate to chat.', user);
-    this.props.navigation.navigate('HomeStack', {
-      name: this.state.name,
-      email: this.state.email,
-      avatar: user.photoURL,
-    });
+    this.props.navigation.navigate('Home',
+      {
+        name: user.displayName,
+        email: user.email,
+        avatar: user.photoURL,
+      }
+    );
   };
   loginFailed = () => {
     console.log('login failed ***');
@@ -73,7 +76,7 @@ class Login extends React.Component {
           value={this.state.password}
         />
         <Button
-          title="Login 2"
+          title="Login"
           style={styles.buttonText}
           onPress={this.onPressLogin}
         />
@@ -87,26 +90,5 @@ class Login extends React.Component {
     );
   }
 }
-
-const offset = 16;
-const styles = StyleSheet.create({
-  title: {
-    marginTop: offset,
-    marginLeft: offset,
-    fontSize: offset,
-  },
-  nameInput: {
-    height: offset * 2,
-    margin: offset,
-    paddingHorizontal: offset,
-    borderColor: '#111111',
-    borderWidth: 1,
-    fontSize: offset,
-  },
-  buttonText: {
-    marginLeft: offset,
-    fontSize: 42,
-  },
-});
 
 export default Login;

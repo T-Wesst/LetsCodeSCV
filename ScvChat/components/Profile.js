@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import firebaseSvc from '../FirebaseSvc';
 
-class CreateAccount extends React.Component {
+class Profile extends React.Component {
   static navigationOptions = {
     title: 'Scv Chatter',
   };
@@ -21,9 +21,6 @@ class CreateAccount extends React.Component {
 
   onPressCreate = async () => {
     console.log('create account... email:' + this.state.email);
-    if(this.state.password.length < 6){
-      return false;
-    }
     try {
       const user = {
         name: this.state.name,
@@ -94,24 +91,14 @@ class CreateAccount extends React.Component {
   };
 
   render() {
-    console.log(this.state.name)
-    const errorPw = this.state.password.length < 6 ? <Text style={styles.error}> password mustbe creater than 6 </Text> : null;
     return (
       <View>
         <Text style={styles.title}>Email:</Text>
         <TextInput
           style={styles.nameInput}
           placeHolder="test3@gmail.com"
-          onChangeText={this.onChangeTextEmail}
           value={this.state.email}
         />
-        <Text style={styles.title}>Password:</Text>
-        <TextInput
-          style={styles.nameInput}
-          onChangeText={this.onChangeTextPassword}
-          value={this.state.password}
-        />
-        {errorPw}
         <Text style={styles.title}>Name:</Text>
         <TextInput
           style={styles.nameInput}
@@ -119,7 +106,7 @@ class CreateAccount extends React.Component {
           value={this.state.name}
         />
         <Button
-          title="Create Account"
+          title="Update Profile"
           style={styles.buttonText}
           onPress={this.onPressCreate}
         />
@@ -140,10 +127,6 @@ const styles = StyleSheet.create({
     marginLeft: offset,
     fontSize: offset,
   },
-  error: {
-    marginLeft: offset,
-    color: '#8b0000',
-  },
   nameInput: {
     height: offset * 2,
     margin: offset,
@@ -158,4 +141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateAccount;
+export default Profile;
